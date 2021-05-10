@@ -1,6 +1,7 @@
 package com.example.space_shooter.Game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,8 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import com.example.space_shooter.Content;
 import com.example.space_shooter.R;
+import com.example.space_shooter.main.MainActivity;
+
 import java.util.ArrayList;
 
 public class GameDrawThread extends Thread {
@@ -25,18 +28,18 @@ public class GameDrawThread extends Thread {
     private Bitmap explosionImg;
     private long bulletTimer, bulletInterval1 = 1500, bulletInterval2 = 1000, bulletInterval3 = 500;
     private ArrayList<Explosion> exps = new ArrayList<>();
-    {
+    private long endGameTimer;
+    private boolean endGame;
+
+    public GameDrawThread(Context context, SurfaceHolder surfaceHolder) {
         backgroundPaint.setColor(Color.BLACK);
         backgroundPaint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
         paint.setTextSize(50.0f);
-    }
 
-    public GameDrawThread(Context context, SurfaceHolder surfaceHolder) {
         player = BitmapFactory.decodeResource(context.getResources(), getResId("player", String.valueOf(Content.player.playerImg), "drawable",context));
         enemy = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
         space = BitmapFactory.decodeResource(context.getResources(), R.drawable.space3);
-        enemy = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
         bullet = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet);
         explosionImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion);
         contextGlobal = context;
@@ -72,6 +75,12 @@ public class GameDrawThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 try {
+                    if (endGame && System.currentTimeMillis() - endGameTimer > 3000) {
+                        running = false;
+                        contextGlobal.startActivity(new Intent(contextGlobal, MainActivity.class));
+                        break;
+                    }
+
                     ArrayList<Enemy> delEnemies = new ArrayList<>();
                     canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
                     canvas.drawBitmap(space, Content.player.x, Content.player.y, backgroundPaint);
@@ -90,11 +99,12 @@ public class GameDrawThread extends Thread {
 
                         }
 
-                        if (e.angle - 90 >= 0) {
-                            e.angle = (int) Math.toDegrees(Math.asin(Math.abs((double) e.y - 600) / (double) d))-90;
-                        } else {
-                            e.angle = (int) Math.toDegrees(Math.asin(Math.abs((double) e.y - 600) / (double) d))+270;
+                        e.angle = (int) Math.toDegrees(Math.atan2(Content.player.x - e.x, Content.player.y > e.y ? e.y - Content.player.y : Content.player.y - e.y));
+                        if (e.angle < 0){
+                            e.angle += 360;
                         }
+
+                        e.angle = (360 - e.angle + 90) % 360;
 
                         enemyList.set(i, e);
                     }
@@ -106,29 +116,35 @@ public class GameDrawThread extends Thread {
                         e.y += e.vy;
                         canvas.drawBitmap(e.rotate(enemy, e.angle), e.x, e.y, backgroundPaint);
 
+                        if (System.currentTimeMillis() - e.bulletTimer > 1000 && e.maxBulets > 0) {
+                            e.bulletTimer = System.currentTimeMillis();
+                            e.maxBulets -= 1;
+                            activeBullets.add(new Bullet(250, e.angle, e.x, e.y, true));
+                        }
+
                         enemyList.set(i, e);
                     }
 
-                   if (Content.player.shootMode > 0 && !Content.player.canShoot) {
-                       if (Content.player.shootMode == 1 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval1 && !Content.player.canShoot) {
+                    if (Content.player.shootMode > 0 && !Content.player.canShoot) {
+                        if (Content.player.shootMode == 1 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval1 && !Content.player.canShoot) {
                            this.bulletTimer = System.currentTimeMillis();
-                           Bullet bullet = new Bullet(500, Content.player.angle, 300f, 600f);
+                           Bullet bullet = new Bullet(500, Content.player.angle, 300f, 600f, false);
                            activeBullets.add(bullet);
-                       }
-                       if (Content.player.shootMode == 2 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval2 && !Content.player.canShoot) {
-                           this.bulletTimer = System.currentTimeMillis();
-                           Bullet bullet = new Bullet(250, Content.player.angle, 300f, 600f);
-                           activeBullets.add(bullet);
-                       }
-                       if (Content.player.shootMode == 3 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval3 && !Content.player.canShoot) {
-                           this.bulletTimer = System.currentTimeMillis();
-                           Bullet bullet = new Bullet(100, Content.player.angle, 300f, 600f);
-                           activeBullets.add(bullet);
-                       }
-                   }
+                        }
+                        if (Content.player.shootMode == 2 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval2 && !Content.player.canShoot) {
+                            this.bulletTimer = System.currentTimeMillis();
+                            Bullet bullet = new Bullet(250, Content.player.angle, 300f, 600f, false);
+                            activeBullets.add(bullet);
+                        }
+                        if (Content.player.shootMode == 3 && System.currentTimeMillis() - this.bulletTimer > this.bulletInterval3 && !Content.player.canShoot) {
+                            this.bulletTimer = System.currentTimeMillis();
+                            Bullet bullet = new Bullet(100, Content.player.angle, 300f, 600f, false);
+                            activeBullets.add(bullet);
+                        }
+                    }
 
-                   ArrayList<Bullet> delBullets = new ArrayList<>();
-                   for (int i = 0; i < activeBullets.size(); i++){
+                    ArrayList<Bullet> delBullets = new ArrayList<>();
+                    for (int i = 0; i < activeBullets.size(); i++){
                         Bullet b = activeBullets.get(i);
 
                         b.x += b.vx;
@@ -138,16 +154,35 @@ public class GameDrawThread extends Thread {
                             delBullets.add(b);
                         }
 
+                        if (Math.abs(Content.player.x - b.x) < 200 && Math.abs(Content.player.y - b.y) < 200) {
+                            Content.player.hp -= b.damage;
+                            if (Content.player.hp <= 0) {
+                                exps.add(new Explosion(Content.player.x, Content.player.y, System.currentTimeMillis()));
+
+                                this.endGame = true;
+                                this.endGameTimer = System.currentTimeMillis();
+                            }
+
+                            delBullets.add(b);
+                        }
+
                         canvas.drawBitmap(b.rotate(bullet, b.angle), b.x, b.y, backgroundPaint);
                         activeBullets.set(i, b);
-                   }
+                    }
 
-                   for (int i = 0; i < enemyList.size(); i++) {
+                    for (int i = 0; i < enemyList.size(); i++) {
                         Enemy e = enemyList.get(i);
                         for (Bullet b : activeBullets) {
-                            if (Math.abs(e.x - b.x) < 150 && Math.abs(e.y - b.y) < 150) {
-                                exps.add(new Explosion(e.x, e.y, System.currentTimeMillis()));
-                                delEnemies.add(e);
+                            if (Math.abs(e.x - b.x) < 150 && Math.abs(e.y - b.y) < 150 && !b.enemyBullet) {
+                                e.hp -= b.damage;
+                                enemyList.set(i, e);
+
+                                if (e.hp <= 0) {
+                                    exps.add(new Explosion(e.x, e.y, System.currentTimeMillis()));
+
+                                    delEnemies.add(e);
+                                }
+
                                 delBullets.add(b);
                             }
                         }
@@ -160,6 +195,7 @@ public class GameDrawThread extends Thread {
                             float d = (float)(Math.sqrt(Math.pow(enemyThis.x - enemyAnother.x, 2) + Math.pow(enemyThis.y - enemyAnother.y, 2)));
                             if (d < 250) {
                                 exps.add(new Explosion(enemyThis.x, enemyThis.y, System.currentTimeMillis()));
+
                                 delEnemies.add(enemyThis);
                                 delEnemies.add(enemyAnother);
                             }
@@ -174,17 +210,16 @@ public class GameDrawThread extends Thread {
                             continue;
                         }
                         exps.set(i, e);
+
                         canvas.drawBitmap(explosionsList.get(e.explosionState), e.eX, e.eY, backgroundPaint);
                     }
 
                     for (Explosion e : delExps) {
                         exps.remove(e);
                     }
-
                     for (Enemy e : delEnemies) {
                         enemyList.remove(e);
                     }
-
                     for (Bullet b : delBullets) {
                         activeBullets.remove(b);
                     }

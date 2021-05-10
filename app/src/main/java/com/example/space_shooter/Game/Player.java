@@ -14,6 +14,7 @@ public class Player {
     public boolean canShoot = false;
     public int playerImg = 1;
     public int playerPreImg = 1;
+    public int hp = 2000;
 
     public Bitmap rotate(Bitmap source, float angleR) {
         Matrix matrix = new Matrix();

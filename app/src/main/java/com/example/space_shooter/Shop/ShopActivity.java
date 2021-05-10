@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.Button;
 
 import com.example.space_shooter.R;
 
@@ -32,11 +33,18 @@ public class ShopActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ShopActivity.this, MainActivity.class));
+                finish();
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
         openQuitDialog();
     }
 
