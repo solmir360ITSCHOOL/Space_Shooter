@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Space Shooter</string>
+    <string name="start">Начать игру!</string>
+    <string name="W">W</string>
+    <string name="L">A</string>
+    <string name="R">D</string>
+    <string name="S">S</string>
+    <string name="title_activity_shop">ShopActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="player1">Черный кот</string>
+    <string name="player2">Лавовый демон</string>
+    <string name="player3">Морской лев</string>
+    <string name="buy">Установить</string>
+    <string name="Shop">Выбор камуфляжа</string>
+</resources>
