@@ -38,6 +38,7 @@ public class GameDrawThread extends Thread {
     private Bitmap enemy, player, bullet, star1;
     private long bulletTimer, bulletInterval1 = 1500, bulletInterval2 = 1000, bulletInterval3 = 500;
     private ArrayList<Explosion> exps = new ArrayList<>();
+    // [TO_COPY] Copy this 2 lines
     private int score = 0;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -83,6 +84,7 @@ public class GameDrawThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 try {
+                    // [TO_COPY] Copy this if
                     if (Content.info.end && System.currentTimeMillis() - Content.info.endGameTimer > 3000) {
                         this.db.collection("HiScore")
                                 .get()
@@ -225,10 +227,12 @@ public class GameDrawThread extends Thread {
                         for (Bullet b : activeBullets) {
                             if (Math.abs(e.x - b.x) < 150 && Math.abs(e.y - b.y) < 150 && !b.enemyBullet) {
                                 e.hp -= b.damage;
+                                // [TO_COPY] Copy this line
                                 score += 1;
                                 enemyList.set(i, e);
 
                                 if (e.hp <= 0) {
+                                    // [TO_COPY] Copy this line
                                     score += 10;
                                     exps.add(new Explosion(e.x, e.y, System.currentTimeMillis()));
 
