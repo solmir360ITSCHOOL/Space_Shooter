@@ -1,5 +1,6 @@
 package com.example.space_shooter.Shop.main;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -21,16 +22,10 @@ import com.example.space_shooter.Content;
 import com.example.space_shooter.R;
 import com.google.android.material.snackbar.Snackbar;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "sectionNumber";
-
     private PageViewModel pageViewModel;
-
-    private static String picture_number = "test";
 
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -48,6 +43,9 @@ public class PlaceholderFragment extends Fragment {
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
+        try {
+            index = this.getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("playerImg", 1);
+        } catch (Exception e) {}
         pageViewModel.setIndex(index);
     }
 
