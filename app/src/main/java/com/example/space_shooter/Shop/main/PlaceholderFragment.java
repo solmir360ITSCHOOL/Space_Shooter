@@ -43,9 +43,6 @@ public class PlaceholderFragment extends Fragment {
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        try {
-            index = this.getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("playerImg", 1);
-        } catch (Exception e) {}
         pageViewModel.setIndex(index);
     }
 

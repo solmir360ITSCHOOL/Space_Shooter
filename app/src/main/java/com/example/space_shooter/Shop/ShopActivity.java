@@ -1,5 +1,6 @@
 package com.example.space_shooter.Shop;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,12 +38,15 @@ public class ShopActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        int index = getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("playerImg", 0);
+        tabs.selectTab(tabs.getTabAt(index));
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Content.player.playerImg = tabs.getSelectedTabPosition()+1;
-                getSharedPreferences("settings", MODE_PRIVATE).edit().putInt("playerImg", Content.player.playerImg).apply();
+                getSharedPreferences("settings", MODE_PRIVATE).edit().putInt("playerImg", Content.player.playerImg - 1).apply();
                 Log.d("PIMG", String.valueOf(Content.player.playerImg));
                 i = new Intent(ShopActivity.this, MainActivity.class);
                 startActivity(i);
@@ -54,7 +58,7 @@ public class ShopActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Content.player.playerImg = tabs.getSelectedTabPosition()+1;
-        getSharedPreferences("settings", MODE_PRIVATE).edit().putInt("playerImg", Content.player.playerImg).apply();
+        getSharedPreferences("settings", MODE_PRIVATE).edit().putInt("playerImg", Content.player.playerImg - 1).apply();
         Log.d("PIMG", String.valueOf(Content.player.playerImg));
         i = new Intent(ShopActivity.this, MainActivity.class);
         startActivity(i);
