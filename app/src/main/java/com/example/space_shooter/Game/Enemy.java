@@ -12,6 +12,7 @@ public class Enemy {
     public int angle ;
     public int hp = 1000;
     public long bulletTimer;
+    public boolean shootNow = false;
 
     public Enemy(double x, double y, double angle) {
         this.angle = (int) angle;

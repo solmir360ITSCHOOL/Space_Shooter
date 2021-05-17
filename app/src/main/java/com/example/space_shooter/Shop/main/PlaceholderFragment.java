@@ -3,6 +3,7 @@ package com.example.space_shooter.Shop.main;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.space_shooter.Content;
 import com.example.space_shooter.R;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_SECTION_NUMBER = "sectionNumber";
 
     private PageViewModel pageViewModel;
 
@@ -53,7 +55,7 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_shop, container, false);
+        final View root = inflater.inflate(R.layout.fragment_shop, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
         final ImageView imageView = root.findViewById(R.id.imageView);
         pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -67,6 +69,8 @@ public class PlaceholderFragment extends Fragment {
                     imageView.setImageResource(holderImg);
                 }
                 else{
+                    Snackbar.make(root, "Произошла непредвиденная ошибка! Этого файла нету в игре или он добавлен вручную.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                     try{
                         String name = "player" + s;
                         int holderString = getResources().getIdentifier(name, "string", getContext().getPackageName());
@@ -83,8 +87,6 @@ public class PlaceholderFragment extends Fragment {
                         imageView.setImageResource(R.mipmap.ic_launcher);
                     }
                 }
-
-                Content.player.playerPreImg = Integer.valueOf(s);
             }
         });
         return root;

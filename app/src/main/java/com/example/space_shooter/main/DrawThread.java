@@ -50,11 +50,11 @@ public class DrawThread extends Thread {
             if (canvas != null) {
                 try {
                     canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
-                    canvas.drawBitmap(bitmap, Content.space.x1, Content.space.y, backgroundPaint);
-                    canvas.drawBitmap(bitmap, Content.space.x2, Content.space.y, backgroundPaint);
+                    canvas.drawBitmap(bitmap, Content.space.x1, 0, backgroundPaint);
+                    canvas.drawBitmap(bitmap, Content.space.x2, 0, backgroundPaint);
                     Content.space.x1++;
                     Content.space.x2++;
-                    Content.space.Proverka();
+                    Content.space.Check();
                 } finally {
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
