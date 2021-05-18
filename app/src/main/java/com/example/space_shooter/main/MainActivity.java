@@ -2,7 +2,6 @@ package com.example.space_shooter.main;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +9,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.example.space_shooter.Content;
 import com.example.space_shooter.Game.GameActivity;
 import com.example.space_shooter.R;
 import com.example.space_shooter.Shop.ShopActivity;
 
-public class MainActivity extends AppCompatActivity /*implements View.OnClickListener*/ {
+public class MainActivity extends AppCompatActivity {
     Button enter, test;
     EditText playerName;
 

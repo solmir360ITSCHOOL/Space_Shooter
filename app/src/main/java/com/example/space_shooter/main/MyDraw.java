@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.space_shooter.main.DrawThread;
-
 public class MyDraw extends SurfaceView implements SurfaceHolder.Callback {
     private DrawThread drawThread;
 

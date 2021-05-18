@@ -1,15 +1,11 @@
 package com.example.space_shooter.Shop.main;
 
 import android.content.Context;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
 import com.example.space_shooter.R;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -1,7 +1,6 @@
 package com.example.space_shooter;
 
 public class GameInfo {
-    public boolean dataBaseOn = false;
     public float x = 0f;
     public float y = 0f;
     public int displayWidth;
